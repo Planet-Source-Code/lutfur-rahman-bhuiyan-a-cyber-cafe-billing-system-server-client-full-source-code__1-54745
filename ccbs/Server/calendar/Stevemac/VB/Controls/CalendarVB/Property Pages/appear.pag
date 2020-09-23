@@ -1,0 +1,332 @@
+VERSION 5.00
+Begin VB.PropertyPage ppAppearance 
+   Caption         =   "Appearance"
+   ClientHeight    =   3255
+   ClientLeft      =   0
+   ClientTop       =   0
+   ClientWidth     =   5700
+   LockControls    =   -1  'True
+   PaletteMode     =   0  'Halftone
+   ScaleHeight     =   3255
+   ScaleWidth      =   5700
+   Begin VB.ComboBox cboDateTipFormat 
+      Height          =   315
+      ItemData        =   "appear.pgx":0000
+      Left            =   2640
+      List            =   "appear.pgx":000D
+      TabIndex        =   10
+      Text            =   "cboDateTipFormat"
+      Top             =   360
+      Width           =   2115
+   End
+   Begin VB.CheckBox chkDateTipEnabled 
+      Caption         =   "Date Tip Enabled"
+      Height          =   225
+      Left            =   2640
+      TabIndex        =   9
+      Top             =   750
+      Value           =   1  'Checked
+      Width           =   2145
+   End
+   Begin VB.ComboBox cboDayFormat 
+      Height          =   315
+      ItemData        =   "appear.pgx":0026
+      Left            =   180
+      List            =   "appear.pgx":0033
+      Style           =   2  'Dropdown List
+      TabIndex        =   6
+      Top             =   1740
+      Width           =   2115
+   End
+   Begin VB.ComboBox cboStartOfWeek 
+      Height          =   315
+      ItemData        =   "appear.pgx":004C
+      Left            =   180
+      List            =   "appear.pgx":004E
+      Style           =   2  'Dropdown List
+      TabIndex        =   5
+      Top             =   2340
+      Width           =   2115
+   End
+   Begin VB.CheckBox chkDisplayDOW 
+      Caption         =   "Display Days Of Week"
+      Height          =   225
+      Left            =   180
+      TabIndex        =   4
+      Top             =   2730
+      Value           =   1  'Checked
+      Width           =   2145
+   End
+   Begin VB.ComboBox cboStyle 
+      Height          =   315
+      Left            =   210
+      Style           =   2  'Dropdown List
+      TabIndex        =   1
+      Top             =   360
+      Width           =   2085
+   End
+   Begin VB.ComboBox cboLineStyle 
+      Height          =   315
+      Left            =   210
+      Style           =   2  'Dropdown List
+      TabIndex        =   0
+      Top             =   930
+      Width           =   2085
+   End
+   Begin VB.Label Labels 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Caption         =   "Date Tip Format:"
+      Height          =   195
+      Index           =   2
+      Left            =   2670
+      TabIndex        =   11
+      Top             =   150
+      Width           =   1185
+   End
+   Begin VB.Label Labels 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Caption         =   "Day Name Format:"
+      Height          =   195
+      Index           =   1
+      Left            =   180
+      TabIndex        =   8
+      Top             =   1530
+      Width           =   1320
+   End
+   Begin VB.Label Labels 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Caption         =   "Start Of Week:"
+      Height          =   195
+      Index           =   0
+      Left            =   180
+      TabIndex        =   7
+      Top             =   2130
+      Width           =   1065
+   End
+   Begin VB.Label lblGeneral 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Caption         =   "Calendar Style:"
+      Height          =   195
+      Index           =   0
+      Left            =   210
+      TabIndex        =   3
+      Top             =   150
+      Width           =   1065
+   End
+   Begin VB.Label lblGeneral 
+      AutoSize        =   -1  'True
+      BackStyle       =   0  'Transparent
+      Caption         =   "Line Style:"
+      Height          =   195
+      Index           =   1
+      Left            =   210
+      TabIndex        =   2
+      Top             =   720
+      Width           =   735
+   End
+End
+Attribute VB_Name = "ppAppearance"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = True
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = True
+'----------------------------------------------------------------------
+' Appearance.pag
+'----------------------------------------------------------------------
+' Implementation file for the appearance property page
+' for the VB calendar control.
+'----------------------------------------------------------------------
+' Copyright © 1997-1999 by CTR Business Systems, Inc.
+'              All Rights Reserved
+'
+' Information Contained Herin is Proprietary and Confidential
+'----------------------------------------------------------------------
+Option Explicit
+
+Private Sub cboDateTipFormat_Click()
+    'change the preview
+'    calPreview.DateTipFormat = cboDateTipFormat.Text
+
+    'set the page's change flag to True
+    PropertyPage.Changed = True
+End Sub 'cboDateTipFormat_Click()
+
+Private Sub cboLineStyle_Click()
+    'change the preview
+'    calPreview.CalendarLineStyle = cboLineStyle.ListIndex
+
+    'set the page's change flag to True
+    PropertyPage.Changed = True
+End Sub 'cboLineStyle_Click()
+
+Private Sub cboStyle_Click()
+    'change the preview
+'    calPreview.CalendarType = cboStyle.ListIndex
+
+    'set the page's change flag to True
+    PropertyPage.Changed = True
+End Sub 'cboStyle_Click()
+
+Private Sub chkDateTipEnabled_Click()
+    'change the preview
+'    calPreview.ShowDateTip = CBool(chkDateTipEnabled.value)
+
+    'set the page's change flag to True
+    PropertyPage.Changed = True
+End Sub 'chkDateTipEnabled_Click()
+
+Private Sub chkDisplayDOW_Click()
+    'change the preview
+'    calPreview.ShowDayHeader = CBool(chkDisplayDOW.value)
+
+    'set the page's change flag to True
+    PropertyPage.Changed = True
+End Sub
+
+'----------------------------------------------------------------------
+' SelectionChanged Event
+'----------------------------------------------------------------------
+' Purpose:  Called when the selected controls are changed
+'           set all controls to reflect property settings
+'           of the selected control(s)
+' Inputs:   None
+' Outputs:  None
+'----------------------------------------------------------------------
+Private Sub PropertyPage_SelectionChanged()
+    Dim cal As CalendarVB     'reference to selected ctl
+    Dim ctl As Control
+
+    If PropertyPage.SelectedControls.Count = 0 Then
+        'what the heck do we do here?
+    Else
+        'get the first selected control (might be the only)
+        Set cal = PropertyPage.SelectedControls(0)
+
+        'load the combos
+        Call LoadFirstDayOfWeekCombo
+        Call LoadCalStyleCombo
+        Call LoadLineStyleCombo
+        Call LoadDateTipFormatCombo
+        
+        'set the control's values according to current
+        'property settings
+        cboDayFormat.ListIndex = cal.DayHeaderFormat
+        cboStartOfWeek.ListIndex = cal.FirstDayOfWeek
+        cboStyle.ListIndex = cal.CalendarType
+        cboLineStyle.ListIndex = cal.LineStyle
+        chkDisplayDOW.Value = Abs(cal.ShowDayHeader)
+        chkDateTipEnabled.Value = Abs(cal.ShowDateTip)
+        cboDateTipFormat.Text = cal.DateTipFormat
+        
+        'initialize the page's change flag to false
+        PropertyPage.Changed = False
+
+    End If 'no controls selected
+    
+End Sub 'PropertyPage_Load()
+
+'----------------------------------------------------------------------
+' ApplyChanges Event
+'----------------------------------------------------------------------
+' Purpose:  Called when the user applies changes to the property
+'           settings.  Set properties of the selected control(s)
+' Inputs:   None
+' Outputs:  None
+'----------------------------------------------------------------------
+Private Sub PropertyPage_ApplyChanges()
+    Dim cal As CalendarVB
+
+    'get the control to set properties on
+    Set cal = PropertyPage.SelectedControls(0)
+
+    'set the properties if they've changed
+    If chkDisplayDOW.DataChanged Then
+        cal.ShowDayHeader = CBool(chkDisplayDOW.Value)
+    End If
+
+    If chkDateTipEnabled.DataChanged Then
+        cal.ShowDateTip = CBool(chkDateTipEnabled.Value)
+    End If
+
+    If cboDateTipFormat.DataChanged Then
+        cal.DateTipFormat = cboDateTipFormat.Text
+    End If
+    
+    If cboDayFormat.DataChanged Then
+        cal.DayHeaderFormat = cboDayFormat.ListIndex
+    End If
+
+    If cboStartOfWeek.DataChanged Then
+        cal.FirstDayOfWeek = cboStartOfWeek.ListIndex
+    End If
+    
+    If cboStyle.DataChanged Then
+        cal.CalendarType = cboStyle.ListIndex
+    End If
+    
+    If cboLineStyle.DataChanged Then
+        cal.LineStyle = cboLineStyle.ListIndex
+    End If
+    
+End Sub 'PropertyPage_ApplyChanges()
+
+Private Sub LoadFirstDayOfWeekCombo()
+    Dim nDay As Long
+
+    cboStartOfWeek.Clear
+    cboStartOfWeek.AddItem "Use System"
+
+    'add the long day names
+    For nDay = 1 To 7
+        cboStartOfWeek.AddItem Format$(DateSerial(1996, 8, 3 + nDay), "dddd")
+    Next nDay
+    
+End Sub 'LoadFirstDayOfWeekCombo()
+
+Private Sub LoadCalStyleCombo()
+
+    cboStyle.Clear
+    cboStyle.AddItem "Month Style"
+    cboStyle.AddItem "Period Style"
+    cboStyle.AddItem "Week Style"
+    
+End Sub 'LoadCalStyleCombo()
+
+Private Sub LoadLineStyleCombo()
+
+   cboLineStyle.Clear
+   cboLineStyle.AddItem "No Line"
+   cboLineStyle.AddItem "3D"
+   cboLineStyle.AddItem "Flat"
+   cboLineStyle.AddItem "Sunken"
+    
+End Sub 'LoadLineStyleCombo()
+
+Private Sub cboStartOfWeek_Click()
+    'change the preview
+'    calPreview.StartOfWeek = cboStartOfWeek.ListIndex
+
+    'set the page's change flag to True
+    PropertyPage.Changed = True
+End Sub 'cboStartOfWeek_Click()
+
+Private Sub cboDayFormat_Click()
+    'change the preview
+'    calPreview.DayHeaderFormat = cboDayFormat.ListIndex
+
+    'set the page's change flag to True
+    PropertyPage.Changed = True
+End Sub 'cboDayFormat_Click()
+
+Private Sub LoadDateTipFormatCombo()
+
+    cboDateTipFormat.Clear
+    cboDateTipFormat.AddItem "mm/dd/yyyy"
+    cboDateTipFormat.AddItem "dd/Mmm/yyyy"
+    cboDateTipFormat.AddItem "Dddd Mmm dd, yyyy"
+    
+End Sub 'LoadDateTipFormatCombo()
